@@ -15,6 +15,7 @@ type number struct {
 
 type board struct {
     numbers [5][5] number
+    hasWon bool
 }
 
 func (b board) show() {
@@ -130,12 +131,21 @@ func parse_input(filename string) ([]int, []board) {
 }
 
 func play(boards []board, numbers []int) int {
+    nBoards := len(boards)
+    nWonBoards := 0
+
     for _, number := range numbers {
         fmt.Println(number)
         for i, _ := range boards {
-            if boards[i].mark(number) {
-                return boards[i].score(number)
+            if boards[i].mark(number) && !boards[i].hasWon {
+                boards[i].hasWon = true
+                nWonBoards++
+
+                if nWonBoards == nBoards {
+                    return boards[i].score(number)
+                }
             }
+
         }
     }
 
