@@ -18,24 +18,18 @@ type board struct {
 }
 
 func (c1 coordinate) step(c2 coordinate) coordinate {
-	c := coordinate{}
-	xDir := c1.x - c2.x
-	yDir := c1.y - c2.y
+	c := coordinate{c1.x, c1.y}
 
-	if xDir < 0 {
+	if c1.x < c2.x {
 		c.x = c1.x + 1
-	} else if xDir > 0 {
+	} else if c1.x > c2.x {
 		c.x = c1.x - 1
-	} else {
-		c.x = c1.x
 	}
 
-	if yDir < 0 {
+	if c1.y < c2.y {
 		c.y = c1.y + 1
-	} else if yDir > 0 {
+	} else if c1.y > c2.y {
 		c.y = c1.y - 1
-	} else {
-		c.x = c1.x
 	}
 
 	return c
@@ -138,14 +132,8 @@ func parseInput(filename string) ([]coordinate, []coordinate) {
 		x2, _ := strconv.Atoi(c2[0])
 		y2, _ := strconv.Atoi(c2[1])
 
-		start := coordinate{
-			x: x1,
-			y: y1,
-		}
-		end := coordinate{
-			x: x2,
-			y: y2,
-		}
+		start := coordinate{x1, y1}
+		end := coordinate{x2, y2}
 
 		starts = append(starts, start)
 		ends = append(ends, end)
