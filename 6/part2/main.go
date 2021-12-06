@@ -11,11 +11,7 @@ import (
 	"strings"
 )
 
-type fish struct {
-	timer int
-}
-
-func parseInput(filename string) []fish {
+func parseInput(filename string) map[int]int {
 	f, _ := os.Open(filename)
 	scanner := bufio.NewScanner(f)
 
@@ -23,38 +19,37 @@ func parseInput(filename string) []fish {
 	line := scanner.Text()
 	ages := strings.Split(line, ",")
 
-	fishes := []fish{}
+	fishes := make(map[int]int)
 	for _, age := range ages {
 		age, _ := strconv.Atoi(age)
-		fish := fish{age}
-		fishes = append(fishes, fish)
+		fishes[age]++
 	}
 
 	return fishes
 }
 
-func nextDay(fishes *[]fish) {
-	newFishes := []fish{}
-
-	for i := range *fishes {
-		t := (*fishes)[i].timer
-		if t == 0 {
-			newFishes = append(newFishes, fish{8})
-			t = 6
-		} else {
-			t--
-		}
-		(*fishes)[i].timer = t
+func nextDay(fishes *map[int]int) {
+	temp := (*fishes)[0]
+	for i := 0; i < 8; i++ {
+		(*fishes)[i] = (*fishes)[i+1]
 	}
+	(*fishes)[6] += temp
+	(*fishes)[8] = temp
+}
 
-	*fishes = append(*fishes, newFishes...)
+func sumFishes(fishes map[int]int) int {
+	sum := 0
+	for _, num := range fishes {
+		sum += num
+	}
+	return sum
 }
 
 func main() {
-	fishes := parseInput("laxen_input.txt")
-	for i := 0; i < 21; i++ {
+	fishes := parseInput("input.txt")
+	for i := 0; i < 256; i++ {
 		nextDay(&fishes)
 	}
 	fmt.Println(fishes)
-	fmt.Println(len(fishes))
+	fmt.Println(sumFishes(fishes))
 }
