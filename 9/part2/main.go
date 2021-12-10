@@ -79,7 +79,6 @@ func findRiskSum(heightmap [][]int) int {
 }
 
 func findBasin(heightmap *[][]tile, x int, y int) int {
-
 	if x < 0 || x >= len((*heightmap)[0]) {
 		return 0
 	}
