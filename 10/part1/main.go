@@ -5,28 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"os"
+
+	"github.com/Laxen/gohelpers"
 )
-
-type stack []rune
-
-func (s *stack) push(c rune) {
-	*s = append(*s, c)
-}
-
-func (s *stack) pop() rune {
-	l := len(*s)
-	ret := (*s)[l-1]
-	*s = (*s)[:l-1]
-	return ret
-}
-
-func (s stack) toString() string {
-	ret := ""
-	for i := range s {
-		ret += string(s[len(s)-i-1])
-	}
-	return ret
-}
 
 func parseInput(filename string) []string {
 	f, _ := os.Open(filename)
@@ -71,16 +52,16 @@ func getMatchingCloser(opener rune) (rune, error) {
 }
 
 func completeLine(line string) (string, error) {
-	s := stack{}
+	s := gohelpers.StackRune{}
 	for _, char := range line {
 		closer, err := getMatchingCloser(char)
 		if err == nil {
-			s.push(closer)
+			s.Push(closer)
 			continue
 		}
 
 		if isCloser(char) {
-			expected := s.pop()
+			expected := s.Pop()
 			if char != expected {
 				return string(char), errors.New("Expected " + string(expected) + ", but found " + string(char) + " instead")
 			}
@@ -88,7 +69,7 @@ func completeLine(line string) (string, error) {
 			return "", errors.New("Corrupted input")
 		}
 	}
-	return s.toString(), nil
+	return s.ToString(), nil
 }
 
 func main() {
