@@ -60,65 +60,37 @@ func parseInput(filename string) map[string]cave {
 	return caveMap
 }
 
-func findPaths(caveMap map[string]cave, curCaveName string, curPath []cave, paths [][]cave, doublevisit bool) [][]cave {
+func countStrings(list []string, target string) (ret int) {
+	for _, s := range list {
+		if s == target {
+			ret++
+		}
+	}
+	return ret
+}
+
+func findPaths(caveMap map[string]cave, curCaveName string, path []string, paths [][]string) [][]string {
 	curCave := caveMap[curCaveName]
 
-	if curCave.visited && curCave.small {
-		if doublevisit || curCaveName == "start" {
-			// fmt.Printf("[%s] Already visited and small, returning...\n", curCaveName)
-			return paths
-		}
-		doublevisit = true
+	if countStrings(path, curCaveName) > 0 && curCave.small {
+		return paths
 	} else if curCave.name == "end" {
-		curPath = append(curPath, curCave)
-		/* Need to copy the slice otherwise it will be overwritten due to memory sharing... */
-		newPath := make([]cave, len(curPath))
-		copy(newPath, curPath)
-		paths = append(paths, newPath)
-
-		// fmt.Printf("[%s] This is the end, curPath is %v\n", curCaveName, curPath)
-		// fmt.Printf("[%s] Paths are:\n", curCaveName)
-		// for _, path := range paths {
-		// 	fmt.Printf("[%s] %v\n", curCaveName, path)
-		// }
+		path = append(path, "end")
+		paths = append(paths, path)
 		return paths
 	}
 
-	curCave.visited = true
-	curPath = append(curPath, curCave)
-	// fmt.Printf("[%s] Marked as visited\n", curCaveName)
-	// fmt.Printf("[%s] Current path is %v\n", curCaveName, curPath)
-
-	newCaveMap := map[string]cave{}
-	for k, c := range caveMap {
-		newCaveMap[k] = c
-	}
-	newCaveMap[curCaveName] = curCave
+	path = append(path, curCaveName)
 	for _, neighbor := range curCave.neighbors {
-		// fmt.Printf("[%s] Go to %s\n", curCaveName, neighbor)
-		paths = findPaths(newCaveMap, neighbor, curPath, paths, doublevisit)
-		// fmt.Printf("[%s] Returned from %s\n", curCaveName, neighbor)
+		paths = findPaths(caveMap, neighbor, path, paths)
 	}
 
-	// fmt.Printf("[%s] No more paths, returning...\n", curCaveName)
 	return paths
-}
-
-func test(caveMap map[string]cave, curCaveName string) {
-	curCave := caveMap[curCaveName]
-	curCave.visited = true
-	caveMap[curCaveName] = curCave
 }
 
 func main() {
 	caveMap := parseInput("input.txt")
 
-	paths := findPaths(caveMap, "start", []cave{}, [][]cave{}, false)
-	// for _, path := range paths {
-	// 	for _, c := range path {
-	// 		fmt.Printf("%s ", c.name)
-	// 	}
-	// 	fmt.Printf("\n")
-	// }
+	paths := findPaths(caveMap, "start", []string{}, [][]string{})
 	fmt.Println(len(paths))
 }
