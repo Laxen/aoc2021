@@ -10,51 +10,27 @@ import (
 	"unicode"
 )
 
-type cave struct {
-	name      string
-	small     bool
-	visited   bool
-	neighbors []string
-}
-
-func makeCave(name string) (c cave) {
-	c.name = name
-	c.visited = false
-
-	c.small = true
-	for _, r := range name {
-		if unicode.IsUpper(r) {
-			c.small = false
-			break
-		}
-	}
-
-	return c
-}
-
-func (c cave) addNeighbor(name string) cave {
-	c.neighbors = append(c.neighbors, name)
-	return c
-}
-
-func parseInput(filename string) map[string]cave {
+func parseInput(filename string) map[string][]string {
 	f, _ := os.Open(filename)
 	s := bufio.NewScanner(f)
 
-	caveMap := map[string]cave{}
+	caveMap := map[string][]string{}
 	for s.Scan() {
 		line := s.Text()
 		nodes := strings.Split(line, "-")
 
-		if _, ok := caveMap[nodes[0]]; !ok {
-			caveMap[nodes[0]] = makeCave(nodes[0])
+		c0 := []string{}
+		c1 := []string{}
+		if _, ok := caveMap[nodes[0]]; ok {
+			c0 = caveMap[nodes[0]]
 		}
-		caveMap[nodes[0]] = caveMap[nodes[0]].addNeighbor(nodes[1])
-
-		if _, ok := caveMap[nodes[1]]; !ok {
-			caveMap[nodes[1]] = makeCave(nodes[1])
+		if _, ok := caveMap[nodes[1]]; ok {
+			c1 = caveMap[nodes[1]]
 		}
-		caveMap[nodes[1]] = caveMap[nodes[1]].addNeighbor(nodes[0])
+		c0 = append(c0, nodes[1])
+		c1 = append(c1, nodes[0])
+		caveMap[nodes[0]] = c0
+		caveMap[nodes[1]] = c1
 	}
 
 	return caveMap
@@ -69,19 +45,26 @@ func countStrings(list []string, target string) (ret int) {
 	return ret
 }
 
-func findPaths(caveMap map[string]cave, curCaveName string, path []string, paths [][]string) [][]string {
-	curCave := caveMap[curCaveName]
+func isLowerCase(s string) bool {
+	for _, r := range s {
+		if unicode.IsUpper(r) {
+			return false
+		}
+	}
+	return true
+}
 
-	if countStrings(path, curCaveName) > 0 && curCave.small {
+func findPaths(caveMap map[string][]string, cave string, path []string, paths [][]string) [][]string {
+	if countStrings(path, cave) > 0 && isLowerCase(cave) {
 		return paths
-	} else if curCave.name == "end" {
+	} else if cave == "end" {
 		path = append(path, "end")
 		paths = append(paths, path)
 		return paths
 	}
 
-	path = append(path, curCaveName)
-	for _, neighbor := range curCave.neighbors {
+	path = append(path, cave)
+	for _, neighbor := range caveMap[cave] {
 		paths = findPaths(caveMap, neighbor, path, paths)
 	}
 
