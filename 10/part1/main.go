@@ -52,7 +52,7 @@ func getMatchingCloser(opener rune) (rune, error) {
 }
 
 func completeLine(line string) (string, error) {
-	s := gohelpers.StackRune{}
+	s := gohelpers.stack.StackRune{}
 	for _, char := range line {
 		closer, err := getMatchingCloser(char)
 		if err == nil {
