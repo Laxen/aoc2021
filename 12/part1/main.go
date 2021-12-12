@@ -54,26 +54,32 @@ func isLowerCase(s string) bool {
 	return true
 }
 
-func findPaths(caveMap map[string][]string, cave string, path []string, paths [][]string) [][]string {
-	if countStrings(path, cave) > 0 && isLowerCase(cave) {
-		return paths
+func findPaths(caveMap map[string][]string, cave string, caveCount map[string]int, paths int) int {
+	if caveCount[cave] > 0 && isLowerCase(cave) {
+		if cave == "start" {
+			return paths
+		}
+		for c, cnt := range caveCount {
+			if isLowerCase(c) && cnt > 1 {
+				return paths
+			}
+		}
 	} else if cave == "end" {
-		path = append(path, "end")
-		paths = append(paths, path)
-		return paths
+		return paths + 1
 	}
 
-	path = append(path, cave)
+	caveCount[cave]++
 	for _, neighbor := range caveMap[cave] {
-		paths = findPaths(caveMap, neighbor, path, paths)
+		paths = findPaths(caveMap, neighbor, caveCount, paths)
 	}
 
+	caveCount[cave]--
 	return paths
 }
 
 func main() {
 	caveMap := parseInput("input.txt")
 
-	paths := findPaths(caveMap, "start", []string{}, [][]string{})
-	fmt.Println(len(paths))
+	paths := findPaths(caveMap, "start", map[string]int{}, 0)
+	fmt.Println(paths)
 }
