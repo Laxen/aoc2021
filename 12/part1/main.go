@@ -78,7 +78,7 @@ func findPaths(caveMap map[string][]string, cave string, caveCount map[string]in
 }
 
 func main() {
-	caveMap := parseInput("input.txt")
+	caveMap := parseInput("maakep.txt")
 
 	paths := findPaths(caveMap, "start", map[string]int{}, 0)
 	fmt.Println(paths)
