@@ -140,8 +140,43 @@ func test(nodes [][]node) {
 	currentNode.x = 1000
 }
 
+func expandMap(nodes [][]node) [][]node {
+	origHeight := len(nodes)
+	origLength := len(nodes[0])
+
+	newNodes := make([][]node, origHeight*5)
+	for i := 0; i < origHeight*5; i++ {
+		newNodes[i] = make([]node, origLength*5)
+	}
+
+	for y, row := range nodes {
+		for x, node := range row {
+			for ly := 0; ly < 5; ly++ {
+				for lx := 0; lx < 5; lx++ {
+					newRisk := node.risk + lx + ly
+					for newRisk > 9 {
+						newRisk = newRisk - 9
+					}
+
+					newNodes[y+origHeight*ly][x+origLength*lx].x = x + origLength*lx
+					newNodes[y+origHeight*ly][x+origLength*lx].y = y + origLength*ly
+					newNodes[y+origHeight*ly][x+origLength*lx].risk = newRisk
+					newNodes[y+origHeight*ly][x+origLength*lx].f = -1
+					newNodes[y+origHeight*ly][x+origLength*lx].g = -1
+					newNodes[y+origHeight*ly][x+origLength*lx].h = -1
+					newNodes[y+origHeight*ly][x+origLength*lx].parent = nil
+				}
+			}
+		}
+	}
+
+	return newNodes
+}
+
 func main() {
-	nodes := parseInput("example2.txt")
+	nodes := parseInput("input.txt")
+	nodes = expandMap(nodes)
+	fmt.Println("Map done!")
 
 	// fmt.Println(nodes[0][0])
 	// test(nodes)
