@@ -1,4 +1,5 @@
 import ast
+import copy
 
 def parseInput(filename):
     pairs = []
@@ -27,7 +28,7 @@ def addRight(p, val):
 
 def reduce(p, depth):
     if depth >= 4:
-        print("Explode", p[0], p[1])
+        # print("Explode", p[0], p[1])
         return 0, p[0], p[1], True
     
     if isinstance(p[0], list):
@@ -58,7 +59,7 @@ def split(p):
         if p >= 10:
             a = int(p/2)
             b = int(p/2+0.5)
-            print("Splitting", p)
+            # print("Splitting", p)
             return [a,b], True
         return p, False
 
@@ -84,24 +85,54 @@ def magnitude(p):
     return 3*a + 2*b
 
 pairs = parseInput("input.txt")
-pair = pairs[0]
-for i in range(1, len(pairs)):
-    pair = addPair(pair, pairs[i])
-    print("After addition:\t", pair)
+maxMag = 0
+for i, origPair in enumerate(pairs):
+    for origAdd in pairs[0:i]:
+        pair = copy.deepcopy(origPair)
+        add = copy.deepcopy(origAdd)
+        # print(pair)
+        # print("   +", add)
 
-    wasReduced = True
-    while True:
-        while wasReduced:
-            pair, _, _, wasReduced = reduce(pair, 0)
-            print("After explosion:", pair)
+        pair = addPair(pair, add)
 
-        pair, wasReduced = split(pair)
-        print("After split:\t", pair)
+        wasReduced = True
+        while True:
+            while wasReduced:
+                pair, _, _, wasReduced = reduce(pair, 0)
+                # print("After explosion:", pair)
 
-        if wasReduced:
-            print("Pair was reduced, repeat!")
-            continue
-        print("Pair reduced! ------------------------------")
-        break
+            pair, wasReduced = split(pair)
+            # print("After split:\t", pair)
 
-print(magnitude(pair))
+            if wasReduced:
+                # print("Pair was reduced, repeat!")
+                continue
+            # print("Pair reduced! ------------------------------")
+            break
+        maxMag = max(maxMag, magnitude(pair))
+
+    for origAdd in pairs[i+1:len(pairs)]:
+        pair = copy.deepcopy(origPair)
+        add = copy.deepcopy(origAdd)
+        # print(pair)
+        # print("   +", add)
+
+        pair = addPair(pair, add)
+
+        wasReduced = True
+        while True:
+            while wasReduced:
+                pair, _, _, wasReduced = reduce(pair, 0)
+                # print("After explosion:", pair)
+
+            pair, wasReduced = split(pair)
+            # print("After split:\t", pair)
+
+            if wasReduced:
+                # print("Pair was reduced, repeat!")
+                continue
+            # print("Pair reduced! ------------------------------")
+            break
+        maxMag = max(maxMag, magnitude(pair))
+
+print(maxMag)
