@@ -1282,7 +1282,7 @@ func main() {
 	offsetMap := map[int]map[int][3][3]int{}
 	flipMap := map[int]map[int][3]bool{}
 	missing := []int{}
-	for i := 0; i < 34; i++ {
+	for i := 0; i < len(sensors); i++ {
 		offsetMap[i] = map[int][3][3]int{}
 		flipMap[i] = map[int][3]bool{}
 		missing = append(missing, i)
@@ -1312,71 +1312,38 @@ func main() {
 		}
 	}
 
-	// s0 := sensors[0]
-
-	// s01 := translateCoords(sensors[1], offsetMap[0][1], flipMap[0][1])
-	// s0 = mergeCoords(s0, s01)
-
-	// s42 := translateCoords(sensors[2], offsetMap[4][2], flipMap[4][2])
-	// s142 := translateCoords(s42, offsetMap[1][4], flipMap[1][4])
-	// s0142 := translateCoords(s142, offsetMap[0][1], flipMap[0][1])
-	// s0 = mergeCoords(s0, s0142)
-
-	// s13 := translateCoords(sensors[3], offsetMap[1][3], flipMap[1][3])
-	// s013 := translateCoords(s13, offsetMap[0][1], flipMap[0][1])
-	// s0 = mergeCoords(s0, s013)
-
-	// s14 := translateCoords(sensors[4], offsetMap[1][4], flipMap[1][4])
-	// s014 := translateCoords(s14, offsetMap[0][1], flipMap[0][1])
-	// s0 = mergeCoords(s0, s014)
-
 	origins := [][][]int{}
-	for i := 0; i < 34; i++ {
+	for i := 0; i < len(sensors); i++ {
 		origins = append(origins, [][]int{{0, 0, 0}})
 	}
 
-	ret := findSolution(sensors, 0, offsetMap, flipMap, missing[1:])
+	ret := findSolution(origins, 0, offsetMap, flipMap, missing[1:])
+	fmt.Println(ret)
 
-	fmt.Println(len(ret))
+	maxDist := 0
+	for _, a := range ret {
+		for _, b := range ret {
+			dist := manhattanDistance(a, b)
+			if dist > maxDist {
+				maxDist = dist
+			}
+		}
+	}
+	fmt.Println(maxDist)
+}
 
-	// offsets[0][3] is the offsets used for translating s3 to s0
-	// s0new := translateCoords(s3, offsets[0][3], flips[0][3])
-	// offsetMap = map[int]map[int][3][3]int{}
-	// flipMap = map[int]map[int][3]bool{}
-	// for i := 0; i < 5; i++ {
-	// 	offsetMap[i] = map[int][3][3]int{}
-	// 	flipMap[i] = map[int][3]bool{}
-	// }
+func abs(a int) int {
+	if a > 0 {
+		return a
+	}
+	return -a
+}
 
-	// offsets = [3][3]int{}
-	// flips = [3]bool{}
-	// for i := 0; i < 3; i++ {
-	// 	offset, flip := findOverlappingCoords(s0, s1, i)
-	// 	offsets[i] = offset
-	// 	flips[i] = flip
-
-	// 	fmt.Printf("%d offset: %d (flip %v)\n", i, offset, flip)
-	// }
-	// offsetMap[0][1] = offsets
-	// flipMap[0][1] = flips
-
-	// s01 := translateCoords(s1, offsets, flips)
-	// s0 = mergeCoords(s0, s01)
-
-	// for i := 0; i < 3; i++ {
-	// 	offset, flip := findOverlappingCoords(s1, s4, i)
-	// 	offsets[i] = offset
-	// 	flips[i] = flip
-
-	// 	fmt.Printf("%d offset: %d (flip %v)\n", i, offset, flip)
-	// }
-	// offsetMap[1][4] = offsets
-	// flipMap[1][4] = flips
-
-	// s14 := translateCoords(s4, offsets, flips)
-	// s04 := translateCoords(s14, offsetMap[0][1], flipMap[0][1])
-	// s0 = mergeCoords(s0, s04)
-
-	// _ = s2
-	// _ = s3
+func manhattanDistance(a, b []int) int {
+	sum := 0
+	for i := range a {
+		d := abs(a[i] - b[i])
+		sum += d
+	}
+	return sum
 }
