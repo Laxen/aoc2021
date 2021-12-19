@@ -28,7 +28,6 @@ def addRight(p, val):
 
 def reduce(p, depth):
     if depth >= 4:
-        # print("Explode", p[0], p[1])
         return 0, p[0], p[1], True
     
     if isinstance(p[0], list):
@@ -59,7 +58,6 @@ def split(p):
         if p >= 10:
             a = int(p/2)
             b = int(p/2+0.5)
-            # print("Splitting", p)
             return [a,b], True
         return p, False
 
@@ -90,8 +88,6 @@ for i, origPair in enumerate(pairs):
     for origAdd in pairs[0:i]:
         pair = copy.deepcopy(origPair)
         add = copy.deepcopy(origAdd)
-        # print(pair)
-        # print("   +", add)
 
         pair = addPair(pair, add)
 
@@ -99,23 +95,17 @@ for i, origPair in enumerate(pairs):
         while True:
             while wasReduced:
                 pair, _, _, wasReduced = reduce(pair, 0)
-                # print("After explosion:", pair)
 
             pair, wasReduced = split(pair)
-            # print("After split:\t", pair)
 
             if wasReduced:
-                # print("Pair was reduced, repeat!")
                 continue
-            # print("Pair reduced! ------------------------------")
             break
         maxMag = max(maxMag, magnitude(pair))
 
     for origAdd in pairs[i+1:len(pairs)]:
         pair = copy.deepcopy(origPair)
         add = copy.deepcopy(origAdd)
-        # print(pair)
-        # print("   +", add)
 
         pair = addPair(pair, add)
 
@@ -123,15 +113,11 @@ for i, origPair in enumerate(pairs):
         while True:
             while wasReduced:
                 pair, _, _, wasReduced = reduce(pair, 0)
-                # print("After explosion:", pair)
 
             pair, wasReduced = split(pair)
-            # print("After split:\t", pair)
 
             if wasReduced:
-                # print("Pair was reduced, repeat!")
                 continue
-            # print("Pair reduced! ------------------------------")
             break
         maxMag = max(maxMag, magnitude(pair))
 

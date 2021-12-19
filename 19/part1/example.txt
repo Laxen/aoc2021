@@ -1,0 +1,39 @@
+0,2 -> 4,1        4,-1
+0,2 -> 3,3        3,1
+
+-1,-1 -> -5,0     -4,1
+-1,-1 -> -2,1     -1,2
+
+-618,-824,-621
+-537,-823,-458
+-447,-329,318
+
+686,422,578
+605,423,415
+515,917,-361
+
+x: flip sign, add 68
+y: add 1246
+z: flip sign, sub 43
+
+offsets = map[int][]coord // all coords that overlap for this offset
+flippedOffsets = map[int][]coord
+
+for each point in s0
+    for each point in s1
+        offset = s0.x - s1.x
+        flippedOffset = s0.x + s1.x
+        if offset in offsets: continue
+        for each point in s1new
+            x = s1new.x + offset
+            flipX = -s1new.x + flippedOffset
+            if x == s0.x
+                add to offsets
+            if flipX == s0.flipX
+                add to flippedOffsets
+
+retOffsets = map[balbal]
+for offset := range offsets
+        if len(offsets[offset]) >= 12
+            retOffsets[offset] = offsets[offset]
+^ same with flipped
