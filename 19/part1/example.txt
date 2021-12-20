@@ -35,5 +35,17 @@ for each point in s0
 retOffsets = map[balbal]
 for offset := range offsets
         if len(offsets[offset]) >= 12
-            retOffsets[offset] = offsets[offset]
-^ same with flipped
+            do the above but for y
+^ same for flipped
+
+---
+
+place s1 in a position in s0
+
+for each ca in sa
+    for each cb in sb
+        offsets = such that cb is on top of ca
+
+        for each ca2 in sa
+            for each cb2 in sa
+                if cb2 + offsets == ca2
