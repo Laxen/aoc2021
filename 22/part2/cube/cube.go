@@ -145,13 +145,6 @@ func (a Cube) Subtract(b Cube) []Cube {
 		return ret
 	}
 
-	if intersection.Y1 > intersection.Y2 {
-		fmt.Println("------")
-		a.Print()
-		b.Print()
-		intersection.Print()
-	}
-
 	subX := subtract1D(a.X1, a.X2, intersection.X1, intersection.X2)
 	for _, c := range subX {
 		c.On = a.On
