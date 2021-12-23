@@ -1,0 +1,4 @@
+github.com/Laxen/gohelpers v0.0.0-20211219201933-53b935722243 h1:inuKfgzXl0R2mVHlgCqrKfo0P17DsX4wStoi/ThUUTY=
+github.com/Laxen/gohelpers v0.0.0-20211219201933-53b935722243/go.mod h1:+SRLzYDcIvhiilnS8HlkFRJpJ1kPovwx2Hcs1O8LwGU=
+github.com/jinzhu/copier v0.3.4 h1:mfU6jI9PtCeUjkjQ322dlff9ELjGDu975C2p/nrubVI=
+github.com/jinzhu/copier v0.3.4/go.mod h1:DfbEm0FYsaqBcKcFuvmOZb218JkPGtvSHsKg8S8hyyg=
