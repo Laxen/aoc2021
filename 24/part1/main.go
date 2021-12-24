@@ -105,6 +105,23 @@ func speedyExecute(serno int) int {
 			serno[10] + 7 - 5 == serno[11]
 			serno[11] + 5 - 9 == serno[12]
 			serno[12] + 8 - 1 == serno[13]
+
+			-----------
+
+			w = digit
+			x = z%26+adds1[di]
+			z /= divs[di]
+
+			x = 1 if x != w else 0
+
+			z = z * (25*x + 1) + (w + adds2[di]) * x
+
+			---------------
+
+			if z%26 + adds1[di] != digit
+				z = z*26/divs[di] + digit + adds2[di]
+			else
+				z = z/divs[di]
 		*/
 
 		x := z%26 + adds1[di]
